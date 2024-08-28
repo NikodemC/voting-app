@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {VoteRequest, VoteResponse } from '../models/models';
+import {VoteRequest } from '../models/models';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environment';
@@ -13,8 +13,8 @@ export class VoteService {
 
   constructor(private http: HttpClient) {}
 
-  submitVote(voterId: number, candidateId: number): Observable<VoteResponse> {
+  submitVote(voterId: number, candidateId: number): Observable<void> {
     const request: VoteRequest = { voterId, candidateId };
-    return this.http.post<VoteResponse>(this.submitVoteUrl, request);
+    return this.http.post<void>(this.submitVoteUrl, request);
   }
 }

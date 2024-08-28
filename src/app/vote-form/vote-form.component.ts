@@ -46,9 +46,7 @@ export class VoteFormComponent implements OnInit {
   submitVote(): void {
     if (this.isVoteValid()) {
       this.voteService.submitVote(this.selectedVoter!.id, this.selectedCandidate!.id).subscribe({
-        next: (response) => {
-          this.voters = response.voters;
-          this.candidates = response.candidates;
+        next: () => {
           this.voteSubmitted.emit();
           this.resetForm();
           alert('Vote submitted successfully!');

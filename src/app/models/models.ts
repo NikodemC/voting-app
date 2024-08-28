@@ -14,8 +14,3 @@ export interface VoteRequest {
   voterId: number;
   candidateId: number;
 }
-
-export interface VoteResponse {
-  voters: Voter[];
-  candidates: Candidate[];
-}
