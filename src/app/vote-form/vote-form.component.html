@@ -1,0 +1,14 @@
+<h2>Vote!</h2>
+<form (ngSubmit)="submitVote()">
+  <select [(ngModel)]="selectedVoter" name="voter">
+    <option [ngValue]="undefined">I am</option>
+    <option *ngFor="let voter of voters" [ngValue]="voter">{{voter.name}}</option>
+  </select>
+
+  <select [(ngModel)]="selectedCandidate" name="candidate">
+    <option [ngValue]="undefined">I vote for</option>
+    <option *ngFor="let candidate of candidates" [ngValue]="candidate">{{candidate.name}}</option>
+  </select>
+
+  <button type="submit">Submit!</button>
+</form>

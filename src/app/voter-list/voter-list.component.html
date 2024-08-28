@@ -1,0 +1,21 @@
+<table>
+  <thead>
+    <tr>
+      <th colspan="2" class="table-header">
+        Voters
+        <input [(ngModel)]="newVoterName" placeholder="Enter voter name" />
+        <button (click)="addVoter()">+</button>
+      </th>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <th class="has-voted-column">Has Voted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let voter of voters">
+      <td>{{voter.name}}</td>
+      <td class="has-voted-column">{{voter.hasVoted ? '✔️' : '❌'}}</td>
+    </tr>
+  </tbody>
+</table>
