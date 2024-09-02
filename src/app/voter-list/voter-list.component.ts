@@ -16,7 +16,7 @@ export class VoterListComponent implements OnInit {
   voters: Voter[] = [];
   newVoterName: string = '';
 
-  @Output() voterAdded = new EventEmitter<void>();
+  @Output() voterAdded = new EventEmitter<Voter>();
 
   constructor(private voterService: VoterService) {}
 
@@ -24,11 +24,11 @@ export class VoterListComponent implements OnInit {
     this.loadVoters();
   }
 
-  loadVoters(): void {
-    this.voterService.getVoters().subscribe({
-      next: (data) => this.voters = data,
-      error: (err) => console.error('Failed to load voters', err)
-    });
+  markAsVoted(voterId: number): void {
+    const voter = this.voters.find(v => v.id === voterId);
+    if (voter) {
+      voter.hasVoted = true;
+    }
   }
 
   addVoter(): void {
@@ -41,11 +41,17 @@ export class VoterListComponent implements OnInit {
     this.voterService.addVoter(name).subscribe({
       next: (newVoter) => {
         this.voters.push(newVoter);
+        this.voterAdded.emit(newVoter);
         this.newVoterName = '';
-        this.voterAdded.emit();
       },
-      error: (err) => console.error('Failed to add voter', err),
-      complete: () => this.loadVoters()
+      error: (err) => console.error('Failed to add voter', err)
+    });
+  }
+
+  private loadVoters(): void {
+    this.voterService.getVoters().subscribe({
+      next: (data) => this.voters = data,
+      error: (err) => console.error('Failed to load voters', err)
     });
   }
 }

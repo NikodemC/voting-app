@@ -19,35 +19,35 @@ export class VoteFormComponent implements OnInit {
   selectedVoter: Voter | undefined;
   selectedCandidate: Candidate | undefined;
 
-  @Output() voteSubmitted = new EventEmitter<void>();
+  @Output() voteSubmitted = new EventEmitter<{ voterId: number, candidateId: number }>();
 
   constructor(
     private voterService: VoterService,
     private candidateService: CandidateService,
     private voteService: VoteService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.loadVotersAndCandidates();
+    this.loadVoters();
+    this.loadCandidates();
   }
 
-  loadVotersAndCandidates(): void {
-    this.voterService.getVoters().subscribe({
-      next: (data) => this.voters = data,
-      error: (err) => console.error('Failed to load voters', err)
-    });
+  addNewVoter(voter: Voter): void {
+    this.voters.push(voter);
+  }
 
-    this.candidateService.getCandidates().subscribe({
-      next: (data) => this.candidates = data,
-      error: (err) => console.error('Failed to load candidates', err)
-    });
+  addNewCandidate(candidate: Candidate): void {
+    this.candidates.push(candidate);
   }
 
   submitVote(): void {
     if (this.isVoteValid()) {
       this.voteService.submitVote(this.selectedVoter!.id, this.selectedCandidate!.id).subscribe({
         next: () => {
-          this.voteSubmitted.emit();
+          this.voteSubmitted.emit({
+            voterId: this.selectedVoter!.id,
+            candidateId: this.selectedCandidate!.id
+          });
           this.resetForm();
           alert('Vote submitted successfully!');
         },
@@ -56,6 +56,20 @@ export class VoteFormComponent implements OnInit {
     } else {
       alert('Please select a voter and a candidate, and ensure the voter has not already voted!');
     }
+  }
+
+  private loadVoters(): void {
+    this.voterService.getVoters().subscribe({
+      next: (data) => this.voters = data,
+      error: (err) => console.error('Failed to load voters', err)
+    });
+  }
+
+  private loadCandidates(): void {
+    this.candidateService.getCandidates().subscribe({
+      next: (data) => this.candidates = data,
+      error: (err) => console.error('Failed to load candidates', err)
+    });
   }
 
   private isVoteValid(): boolean {

@@ -16,7 +16,7 @@ export class CandidateListComponent implements OnInit {
   candidates: Candidate[] = [];
   newCandidateName: string = '';
 
-  @Output() candidateAdded = new EventEmitter<void>();
+  @Output() candidateAdded = new EventEmitter<Candidate>();
 
   constructor(private candidateService: CandidateService) {}
 
@@ -24,11 +24,11 @@ export class CandidateListComponent implements OnInit {
     this.loadCandidates();
   }
 
-  loadCandidates(): void {
-    this.candidateService.getCandidates().subscribe({
-      next: (data) => this.candidates = data,
-      error: (err) => console.error('Failed to load candidates', err)
-    });
+  addVote(candidateId: number): void {
+    const candidate = this.candidates.find(c => c.id === candidateId);
+    if (candidate) {
+      candidate.votes += 1;
+    }
   }
 
   addCandidate(): void {
@@ -41,11 +41,17 @@ export class CandidateListComponent implements OnInit {
     this.candidateService.addCandidate(name).subscribe({
       next: (newCandidate) => {
         this.candidates.push(newCandidate);
+        this.candidateAdded.emit(newCandidate);
         this.newCandidateName = '';
-        this.candidateAdded.emit();
       },
-      error: (err) => console.error('Failed to add candidate', err),
-      complete: () => this.loadCandidates()
+      error: (err) => console.error('Failed to add candidate', err)
+    });
+  }
+
+  private loadCandidates(): void {
+    this.candidateService.getCandidates().subscribe({
+      next: (data) => this.candidates = data,
+      error: (err) => console.error('Failed to load candidates', err)
     });
   }
 }

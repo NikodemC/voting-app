@@ -3,12 +3,12 @@
 
   <div class="tables-container">
     <div class="tables">
-      <app-voter-list (voterAdded)="handleVoterAdded()"></app-voter-list>
-      <app-candidate-list (candidateAdded)="handleCandidateAdded()"></app-candidate-list>
+      <app-voter-list (voterAdded)="handleVoterAdded($event)"></app-voter-list>
+      <app-candidate-list (candidateAdded)="handleCandidateAdded($event)"></app-candidate-list>
     </div>
   </div>
 
   <hr />
 
-  <app-vote-form (voteSubmitted)="handleVoteSubmitted()"></app-vote-form>
+  <app-vote-form (voteSubmitted)="handleVoteSubmitted($event)"></app-vote-form>
 </div>

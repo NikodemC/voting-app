@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { VoterListComponent } from './voter-list/voter-list.component';
 import { CandidateListComponent } from './candidate-list/candidate-list.component';
 import { VoteFormComponent } from './vote-form/vote-form.component';
+import { Candidate, Voter } from './models/models';
 
 @Component({
   selector: 'app-root',
@@ -17,22 +18,22 @@ export class AppComponent {
   @ViewChild(VoterListComponent) voterListComponent!: VoterListComponent;
   @ViewChild(CandidateListComponent) candidateListComponent!: CandidateListComponent;
 
-  handleVoterAdded(): void {
+  handleVoterAdded(voter: Voter): void {
     if (this.voteFormComponent) {
-      this.voteFormComponent.loadVotersAndCandidates();
+      this.voteFormComponent.addNewVoter(voter);
     }
   }
 
-  handleCandidateAdded(): void {
+  handleCandidateAdded(candidate: Candidate): void {
     if (this.voteFormComponent) {
-      this.voteFormComponent.loadVotersAndCandidates();
+      this.voteFormComponent.addNewCandidate(candidate);
     }
   }
 
-  handleVoteSubmitted(): void {
+  handleVoteSubmitted(data: { voterId: number, candidateId: number }): void {
     if (this.voterListComponent && this.candidateListComponent) {
-      this.voterListComponent.loadVoters();
-      this.candidateListComponent.loadCandidates();
+      this.voterListComponent.markAsVoted(data.voterId);
+      this.candidateListComponent.addVote(data.candidateId);
     }
   }
 }
